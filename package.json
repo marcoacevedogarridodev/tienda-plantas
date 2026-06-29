@@ -1,0 +1,17 @@
+{
+  "name": "tienda-plantas",
+  "version": "1.0.0",
+  "description": "Tienda de plantas con Stripe",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "dotenv": "^16.6.1",
+    "express": "^4.22.2",
+    "stripe": "^16.12.0"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

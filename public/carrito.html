@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <title>Carrito - Tienda de Plantas Paula</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Figtree', system-ui, sans-serif; background: #f5f0eb; padding: 40px 20px; }
+
+        .container { max-width: 900px; margin: 0 auto; }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 30px;
+            color: #2d4a22;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+        .back-link:hover { color: #1e3316; }
+        .back-link svg { vertical-align: middle; margin-right: 8px; }
+
+        h1 {
+            color: #2d4a22;
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+        .carrito-sub {
+            color: #7a9a6e;
+            margin-bottom: 30px;
+        }
+
+        .carrito-vacio {
+            text-align: center;
+            padding: 60px 20px;
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+        }
+        .carrito-vacio svg {
+            width: 80px;
+            height: 80px;
+            fill: #ddd;
+            margin-bottom: 20px;
+        }
+        .carrito-vacio h2 { color: #2d4a22; margin-bottom: 8px; }
+        .carrito-vacio p { color: #888; margin-bottom: 20px; }
+        .carrito-vacio a {
+            background: #2d4a22;
+            color: white;
+            padding: 12px 32px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-block;
+        }
+        .carrito-vacio a:hover { background: #1e3316; }
+
+        .carrito-items {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+            margin-bottom: 24px;
+        }
+
+        .carrito-item {
+            display: grid;
+            grid-template-columns: 80px 1fr auto;
+            gap: 16px;
+            padding: 16px 0;
+            border-bottom: 1px solid #eee;
+            align-items: center;
+        }
+        .carrito-item:last-child { border-bottom: none; }
+
+        .carrito-item .item-imagen {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+        .carrito-item .item-info h3 {
+            color: #2d4a22;
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        .carrito-item .item-info .item-precio {
+            font-weight: 700;
+            color: #2d4a22;
+            font-size: 0.95rem;
+        }
+        .carrito-item .item-info .item-subtotal {
+            color: #666;
+            font-size: 0.85rem;
+        }
+        .carrito-item .item-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .carrito-item .item-actions .cantidad-control {
+            display: flex;
+            align-items: center;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+        .carrito-item .item-actions .cantidad-control button {
+            background: #f5f0eb;
+            border: none;
+            padding: 4px 12px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: background 0.2s;
+        }
+        .carrito-item .item-actions .cantidad-control button:hover { background: #e0d6cc; }
+        .carrito-item .item-actions .cantidad-control span {
+            padding: 4px 14px;
+            font-weight: 600;
+            min-width: 30px;
+            text-align: center;
+        }
+        .carrito-item .item-actions .btn-eliminar {
+            background: none;
+            border: none;
+            color: #e74c3c;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: transform 0.2s;
+        }
+        .carrito-item .item-actions .btn-eliminar:hover { transform: scale(1.2); }
+        .carrito-item .item-actions .stock-error {
+            color: #e74c3c;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .carrito-resumen {
+            background: white;
+            border-radius: 16px;
+            padding: 24px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+        }
+        .carrito-resumen .linea {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            font-size: 0.95rem;
+            color: #555;
+        }
+        .carrito-resumen .linea.total {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #2d4a22;
+            border-top: 2px solid #eee;
+            margin-top: 8px;
+            padding-top: 16px;
+        }
+        .carrito-resumen .btn-checkout {
+            width: 100%;
+            background: #2d4a22;
+            color: white;
+            border: none;
+            padding: 16px;
+            border-radius: 25px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            font-family: 'Figtree', system-ui, sans-serif;
+            cursor: pointer;
+            transition: background 0.3s;
+            margin-top: 16px;
+        }
+        .carrito-resumen .btn-checkout:hover { background: #1e3316; }
+        .carrito-resumen .btn-checkout:disabled {
+            background: #aaa;
+            cursor: not-allowed;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 100px;
+            right: 30px;
+            background: #2d4a22;
+            color: white;
+            padding: 14px 24px;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+            transform: translateY(100px);
+            opacity: 0;
+            transition: transform 0.4s ease, opacity 0.4s ease;
+            z-index: 1001;
+            font-weight: 500;
+            max-width: 320px;
+        }
+        .toast.visible {
+            transform: translateY(0);
+            opacity: 1;
+        }
+        .toast.error { background: #c62828; }
+
+        @media (max-width: 600px) {
+            body { padding: 20px 10px; }
+            .carrito-item {
+                grid-template-columns: 60px 1fr;
+                gap: 12px;
+            }
+            .carrito-item .item-imagen { width: 60px; height: 60px; }
+            .carrito-item .item-actions {
+                grid-column: 1 / -1;
+                justify-content: flex-start;
+            }
+            .carrito-resumen .btn-checkout { font-size: 1rem; padding: 14px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <a href="/" class="back-link">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+            Seguir comprando
+        </a>
+
+        <h1>🛒 Mi carrito</h1>
+        <p class="carrito-sub" id="carritoSub">Revisa tu selección antes de comprar</p>
+
+        <div id="carritoContenido"></div>
+    </div>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+        const carritoContenido = document.getElementById('carritoContenido');
+        const carritoSub = document.getElementById('carritoSub');
+        const toast = document.getElementById('toast');
+
+        let productosCache = {};
+        let carritoItems = [];
+
+        // ── CARRITO ──
+        function obtenerCarrito() {
+            try { return JSON.parse(localStorage.getItem('carrito')) || []; } catch { return []; }
+        }
+        function guardarCarrito(carrito) {
+            localStorage.setItem('carrito', JSON.stringify(carrito));
+        }
+        function mostrarToast(mensaje, esError = false) {
+            toast.textContent = mensaje;
+            toast.className = 'toast visible' + (esError ? ' error' : '');
+            setTimeout(() => toast.classList.remove('visible'), 3500);
+        }
+
+        // ── CARGAR PRODUCTOS DEL CARRITO ──
+        async function cargarCarrito() {
+            const carrito = obtenerCarrito();
+            if (carrito.length === 0) {
+                mostrarVacio();
+                return;
+            }
+
+            // Cargar todos los productos del carrito
+            const ids = carrito.map(item => item.id);
+            const promesas = ids.map(id => fetch(`/api/producto/${id}`).then(res => res.json()));
+            
+            try {
+                const productos = await Promise.all(promesas);
+                productos.forEach(p => { productosCache[p.id] = p; });
+                carritoItems = carrito.map(item => ({
+                    ...item,
+                    producto: productosCache[item.id]
+                }));
+                renderizarCarrito();
+            } catch (error) {
+                console.error('Error cargando carrito:', error);
+                mostrarToast('Error al cargar el carrito', true);
+            }
+        }
+
+        function renderizarCarrito() {
+            if (carritoItems.length === 0) {
+                mostrarVacio();
+                return;
+            }
+
+            let html = '<div class="carrito-items">';
+            let subtotal = 0;
+            let hayErrores = false;
+
+            carritoItems.forEach((item, index) => {
+                const p = item.producto;
+                if (!p) return;
+
+                const subtotalItem = p.precio * item.cantidad;
+                subtotal += subtotalItem;
+                const stockOk = item.cantidad <= p.stock;
+
+                if (!stockOk) hayErrores = true;
+
+                html += `
+                    <div class="carrito-item" data-index="${index}">
+                        <img class="item-imagen" src="${p.imagen}" alt="${p.nombre}">
+                        <div class="item-info">
+                            <h3>${p.nombre}</h3>
+                            <div class="item-precio">$${p.precio.toLocaleString('es-CL')}</div>
+                            <div class="item-subtotal">Subtotal: $${subtotalItem.toLocaleString('es-CL')}</div>
+                            ${!stockOk ? `<div class="stock-error">⚠️ Stock disponible: ${p.stock}</div>` : ''}
+                        </div>
+                        <div class="item-actions">
+                            <div class="cantidad-control">
+                                <button class="btn-cantidad" data-index="${index}" data-delta="-1">−</button>
+                                <span>${item.cantidad}</span>
+                                <button class="btn-cantidad" data-index="${index}" data-delta="1">+</button>
+                            </div>
+                            <button class="btn-eliminar" data-index="${index}">✕</button>
+                        </div>
+                    </div>
+                `;
+            });
+
+            html += '</div>';
+
+            // Resumen
+            const total = subtotal;
+            const envio = total > 50000 ? 0 : 3000;
+            const totalFinal = total + envio;
+
+            html += `
+                <div class="carrito-resumen">
+                    <div class="linea"><span>Subtotal</span><span>$${subtotal.toLocaleString('es-CL')}</span></div>
+                    <div class="linea"><span>Envío</span><span>${envio === 0 ? 'Gratis 🎉' : '$' + envio.toLocaleString('es-CL')}</span></div>
+                    <div class="linea total"><span>Total</span><span>$${totalFinal.toLocaleString('es-CL')}</span></div>
+                    ${envio > 0 ? '<div style="text-align:right;font-size:0.75rem;color:#888;margin-top:-4px;">💡 Envío gratis en compras sobre $50.000</div>' : ''}
+                    <button class="btn-checkout" id="btnCheckout" ${hayErrores ? 'disabled' : ''}>
+                        ${hayErrores ? '⚠️ Revisa el stock' : 'Proceder al pago →'}
+                    </button>
+                </div>
+            `;
+
+            carritoContenido.innerHTML = html;
+            carritoSub.textContent = `${carritoItems.length} productos en tu carrito`;
+
+            // Eventos
+            document.querySelectorAll('.btn-cantidad').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const index = parseInt(btn.dataset.index);
+                    const delta = parseInt(btn.dataset.delta);
+                    cambiarCantidad(index, delta);
+                });
+            });
+
+            document.querySelectorAll('.btn-eliminar').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const index = parseInt(btn.dataset.index);
+                    eliminarItem(index);
+                });
+            });
+
+            document.getElementById('btnCheckout')?.addEventListener('click', procesarCheckout);
+        }
+
+        function mostrarVacio() {
+            carritoContenido.innerHTML = `
+                <div class="carrito-vacio">
+                    <svg viewBox="0 0 24 24"><path d="M7 18c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm10 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zM6.21 6h13.79l-2.4 8.1c-.3 1.1-1.3 1.9-2.4 1.9H8.4c-1.1 0-2.1-.8-2.4-1.9L3.4 4.8C3.1 3.8 2.1 3 1 3H0v2h1l3.6 13.2C5.1 19.2 6.4 20 7.6 20h10.8c1.2 0 2.5-.8 2.9-2.1L24 8H6.21z"/></svg>
+                    <h2>Tu carrito está vacío</h2>
+                    <p>¡Es momento de llenarlo de plantas!</p>
+                    <a href="/">Explorar catálogo</a>
+                </div>
+            `;
+            carritoSub.textContent = 'No hay productos en tu carrito';
+        }
+
+        // ── FUNCIONES DEL CARRITO ──
+        async function cambiarCantidad(index, delta) {
+            const carrito = obtenerCarrito();
+            const item = carrito[index];
+            if (!item) return;
+
+            const producto = productosCache[item.id];
+            if (!producto) return;
+
+            const nuevaCantidad = item.cantidad + delta;
+            if (nuevaCantidad < 1) return;
+            if (nuevaCantidad > producto.stock) {
+                mostrarToast(`⚠️ Stock disponible: ${producto.stock}`, true);
+                return;
+            }
+
+            carrito[index].cantidad = nuevaCantidad;
+            guardarCarrito(carrito);
+            await cargarCarrito(); // Recargar
+        }
+
+        async function eliminarItem(index) {
+            const carrito = obtenerCarrito();
+            carrito.splice(index, 1);
+            guardarCarrito(carrito);
+            mostrarToast('🗑️ Producto eliminado del carrito');
+            await cargarCarrito(); // Recargar
+        }
+
+        // ── CHECKOUT ──
+        async function procesarCheckout() {
+            const btn = document.getElementById('btnCheckout');
+            btn.disabled = true;
+            btn.textContent = 'Procesando...';
+
+            try {
+                const carrito = obtenerCarrito();
+                
+                // Verificar stock en el backend
+                const verificarRes = await fetch('/api/verificar-stock', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ items: carrito })
+                });
+
+                const verificarData = await verificarRes.json();
+                if (!verificarRes.ok) {
+                    const errores = verificarData.errores || [];
+                    const mensaje = errores.map(e => e.error).join(' | ');
+                    mostrarToast(`⚠️ ${mensaje}`, true);
+                    btn.disabled = false;
+                    btn.textContent = 'Proceder al pago →';
+                    await cargarCarrito(); // Recargar para mostrar errores
+                    return;
+                }
+
+                // Crear sesión de pago
+                const res = await fetch('/api/checkout-carrito', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ items: carrito })
+                });
+
+                const data = await res.json();
+
+                if (data.url) {
+                    // Limpiar carrito y redirigir
+                    localStorage.removeItem('carrito');
+                    window.location.href = data.url;
+                } else {
+                    throw new Error('No se recibió URL de pago');
+                }
+            } catch (error) {
+                console.error('Error en checkout:', error);
+                mostrarToast('Error al procesar el pago', true);
+                btn.disabled = false;
+                btn.textContent = 'Proceder al pago →';
+            }
+        }
+
+        // ── INICIALIZAR ──
+        cargarCarrito();
+    </script>
+</body>
+</html>

@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <title>Detalle de producto - Tienda de Plantas Paula</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Figtree', system-ui, sans-serif; background: #f5f0eb; padding: 40px 20px; }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 30px;
+            color: #2d4a22;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: color 0.2s;
+        }
+        .back-link:hover { color: #1e3316; }
+        .back-link svg { vertical-align: middle; margin-right: 8px; }
+
+        /* ── CARD PRINCIPAL ── */
+        .producto-detalle {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+            display: grid;
+            grid-template-columns: 1.1fr 0.9fr;
+            gap: 32px;
+            align-items: start;
+        }
+        .producto-detalle .imagen {
+            width: 100%;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        .producto-detalle .imagen img {
+            width: 100%;
+            display: block;
+            aspect-ratio: 7 / 6;
+            object-fit: cover;
+        }
+        .producto-detalle .info {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        .producto-detalle .categoria {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: #7a9a6e;
+            font-weight: 600;
+        }
+        .producto-detalle h1 {
+            font-size: 2rem;
+            color: #2d4a22;
+            font-weight: 700;
+            line-height: 1.2;
+            margin-top: 4px;
+        }
+        .producto-detalle .precio {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #2d4a22;
+        }
+        .producto-detalle .stock-info {
+            font-size: 0.9rem;
+            color: #666;
+        }
+        .producto-detalle .stock-info .disponible { color: #4CAF50; font-weight: 600; }
+        .producto-detalle .stock-info .agotado { color: #c62828; font-weight: 600; }
+
+        /* ── ACCIONES ── */
+        .acciones {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-top: auto;
+            padding-top: 8px;
+            flex-wrap: wrap;
+        }
+        .btn-agregar {
+            background: #2d4a22;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: 600;
+            font-family: 'Figtree', system-ui, sans-serif;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .btn-agregar:hover { background: #1e3316; }
+        .btn-agregar:disabled { background: #aaa; cursor: not-allowed; }
+        .cantidad {
+            display: flex;
+            align-items: center;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .cantidad button {
+            background: #f5f0eb;
+            border: none;
+            padding: 8px 16px;
+            font-size: 1.2rem;
+            cursor: pointer;
+            font-weight: 600;
+            transition: background 0.2s;
+        }
+        .cantidad button:hover { background: #e0d6cc; }
+        .cantidad span {
+            padding: 8px 20px;
+            font-weight: 600;
+            min-width: 40px;
+            text-align: center;
+        }
+
+        /* ── DETALLE EXTRA: 2 COLUMNAS ── */
+        .detalle-extra {
+            max-width: 1100px;
+            margin: 20px auto 0;
+            background: white;
+            border-radius: 16px;
+            padding: 32px 40px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.08);
+            display: grid;
+            grid-template-columns: 2fr 1.4fr;
+            gap: 40px;
+            align-items: start;
+        }
+
+        /* ── INDICADORES (columna izquierda) ── */
+        .col-indicadores {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+        .col-titulo {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: #2d4a22;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+        .meta-icon {
+            font-size: 1.2rem;
+            min-width: 28px;
+            text-align: center;
+        }
+        .meta-right {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+            flex: 1;
+        }
+        .meta-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #2d4a22;
+            font-weight: 600;
+        }
+        .cuadros {
+            display: flex;
+            gap: 3px;
+        }
+        .cuadro {
+            width: 18px;
+            height: 18px;
+            border-radius: 4px;
+            border: 1px solid #d8d0c8;
+            background: #e9e2d8;
+        }
+        .cuadro.activo-verde    { background: #4CAF50; border-color: #3d9140; }
+        .cuadro.activo-amarillo { background: #FFC107; border-color: #e6ad00; }
+        .cuadro.activo-rojo     { background: #F44336; border-color: #d32f2f; }
+
+        /* ── DESCRIPCIÓN (columna derecha) ── */
+        .col-descripcion {}
+        .col-descripcion-titulo {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: #2d4a22;
+            font-weight: 700;
+            margin-bottom: 14px;
+        }
+        .col-descripcion p {
+            color: #444;
+            font-size: 0.97rem;
+            line-height: 1.75;
+        }
+
+        /* ── TOAST ── */
+        .toast {
+            position: fixed;
+            bottom: 100px;
+            right: 30px;
+            background: #2d4a22;
+            color: white;
+            padding: 14px 24px;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+            transform: translateY(100px);
+            opacity: 0;
+            transition: transform 0.4s ease, opacity 0.4s ease;
+            z-index: 1001;
+            font-weight: 500;
+        }
+        .toast.visible { transform: translateY(0); opacity: 1; }
+
+        /* ── CARRITO FLOTANTE ── */
+        .cart-floating {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #2d4a22;
+            color: white;
+            padding: 16px 20px;
+            border-radius: 50px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: transform 0.2s, background 0.2s;
+            z-index: 1000;
+            text-decoration: none;
+        }
+        .cart-floating:hover { transform: scale(1.05); background: #1e3316; }
+        .cart-floating .cart-count {
+            background: #fd0000;
+            color: white;
+            border-radius: 50%;
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: 700;
+        }
+        .cart-floating svg { width: 24px; height: 24px; fill: currentColor; }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 900px) {
+            .producto-detalle { grid-template-columns: 1fr; padding: 24px; }
+            .detalle-extra { grid-template-columns: 1fr; padding: 24px; gap: 28px; }
+        }
+        @media (max-width: 768px) {
+            .producto-detalle { padding: 20px; }
+            .producto-detalle h1 { font-size: 1.5rem; }
+            .producto-detalle .precio { font-size: 1.4rem; }
+            .acciones { flex-direction: column; align-items: flex-start; }
+            .btn-agregar { width: 100%; }
+        }
+        @media (max-width: 600px) {
+            body { padding: 20px 10px; }
+            .producto-detalle { padding: 18px; }
+            .detalle-extra { padding: 20px; }
+            .cart-floating { bottom: 20px; right: 20px; padding: 12px 16px; }
+        }
+    </style>
+</head>
+<body>
+
+    <a href="/" class="back-link">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        Volver al catálogo
+    </a>
+
+    <!-- CARD PRINCIPAL -->
+    <div class="producto-detalle" id="productoDetalle">
+        <div class="imagen">
+            <img id="productoImagen" src="" alt="">
+        </div>
+        <div class="info">
+            <div>
+                <span class="categoria" id="productoCategoria">Categoría</span>
+                <h1 id="productoNombre">Nombre</h1>
+            </div>
+            <div class="stock-info" id="productoStock">Cargando...</div>
+            <div class="precio" id="productoPrecio">$0</div>
+            <div class="acciones">
+                <div class="cantidad">
+                    <button id="btnMenos">−</button>
+                    <span id="cantidad">1</span>
+                    <button id="btnMas">+</button>
+                </div>
+                <button class="btn-agregar" id="btnAgregar">Agregar al carrito</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- DETALLE EXTRA: indicadores + descripción -->
+    <div class="detalle-extra">
+
+        <!-- COLUMNA 1: indicadores con ícono + cuadros -->
+        <div class="col-indicadores">
+            <div class="col-titulo">Indicadores</div>
+
+            <div class="meta-item">
+                <span class="meta-icon">☠️</span>
+                <div class="meta-right">
+                    <div class="meta-label">Toxicidad</div>
+                    <div id="toxicidadCuadros" class="cuadros"></div>
+                </div>
+            </div>
+            <div class="meta-item">
+                <span class="meta-icon">🌿</span>
+                <div class="meta-right">
+                    <div class="meta-label">Nivel de cuidado</div>
+                    <div id="cuidadoCuadros" class="cuadros"></div>
+                </div>
+            </div>
+            <div class="meta-item">
+                <span class="meta-icon">💧</span>
+                <div class="meta-right">
+                    <div class="meta-label">Agua</div>
+                    <div id="aguaCuadros" class="cuadros"></div>
+                </div>
+            </div>
+            <div class="meta-item">
+                <span class="meta-icon">☀️</span>
+                <div class="meta-right">
+                    <div class="meta-label">Luz</div>
+                    <div id="luzCuadros" class="cuadros"></div>
+                </div>
+            </div>
+            <div class="meta-item">
+                <span class="meta-icon">🌞</span>
+                <div class="meta-right">
+                    <div class="meta-label">Sol directo</div>
+                    <div id="solDirectoCuadros" class="cuadros"></div>
+                </div>
+            </div>
+            <div class="meta-item">
+                <span class="meta-icon">💦</span>
+                <div class="meta-right">
+                    <div class="meta-label">Humedad</div>
+                    <div id="humedadCuadros" class="cuadros"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Columna 2: descripción del producto -->
+        <div class="col-descripcion">
+            <div class="col-descripcion-titulo">Descripción</div>
+            <p id="productoDescripcionDetalle">Cargando...</p>
+        </div>
+
+    </div>
+
+    <a href="/carrito.html" class="cart-floating">
+        <svg viewBox="0 0 24 24"><path d="M7 18c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm10 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zM6.21 6h13.79l-2.4 8.1c-.3 1.1-1.3 1.9-2.4 1.9H8.4c-1.1 0-2.1-.8-2.4-1.9L3.4 4.8C3.1 3.8 2.1 3 1 3H0v2h1l3.6 13.2C5.1 19.2 6.4 20 7.6 20h10.8c1.2 0 2.5-.8 2.9-2.1L24 8H6.21z"/></svg>
+        <span class="cart-count" id="cartCount">0</span>
+    </a>
+
+    <div class="toast" id="toast"></div>
+
+    <script>
+        const params = new URLSearchParams(window.location.search);
+        const productoId = params.get('id');
+
+        const elNombre       = document.getElementById('productoNombre');
+        const elPrecio       = document.getElementById('productoPrecio');
+        const elImagen       = document.getElementById('productoImagen');
+        const elCategoria    = document.getElementById('productoCategoria');
+        const elStock        = document.getElementById('productoStock');
+        const elDescripcion  = document.getElementById('productoDescripcionDetalle');
+        const elCantidad     = document.getElementById('cantidad');
+        const btnMenos       = document.getElementById('btnMenos');
+        const btnMas         = document.getElementById('btnMas');
+        const btnAgregar     = document.getElementById('btnAgregar');
+        const toast          = document.getElementById('toast');
+        const cartCount      = document.getElementById('cartCount');
+
+        const cuadrosEls = {
+            toxicidad:  document.getElementById('toxicidadCuadros'),
+            cuidado:    document.getElementById('cuidadoCuadros'),
+            agua:       document.getElementById('aguaCuadros'),
+            luz:        document.getElementById('luzCuadros'),
+            solDirecto: document.getElementById('solDirectoCuadros'),
+            humedad:    document.getElementById('humedadCuadros'),
+        };
+
+        let producto = null;
+        let cantidad = 1;
+
+        // ── CARRITO ──
+        function obtenerCarrito() {
+            try { return JSON.parse(localStorage.getItem('carrito')) || []; } catch { return []; }
+        }
+        function guardarCarrito(c) {
+            localStorage.setItem('carrito', JSON.stringify(c));
+            actualizarContador();
+        }
+        function actualizarContador() {
+            const total = obtenerCarrito().reduce((s, i) => s + i.cantidad, 0);
+            cartCount.textContent = total;
+        }
+        function mostrarToast(msg) {
+            toast.textContent = msg;
+            toast.classList.add('visible');
+            setTimeout(() => toast.classList.remove('visible'), 3000);
+        }
+
+        // ── CUADROS ──
+        function renderCuadros(container, total) {
+            container.innerHTML = '';
+            const n = Math.max(0, Number(total) || 0);
+            for (let i = 1; i <= n; i++) {
+                const div = document.createElement('div');
+                div.className = 'cuadro activo-' + (i <= 2 ? 'verde' : i <= 4 ? 'amarillo' : 'rojo');
+                container.appendChild(div);
+            }
+        }
+
+        // ── RENDER ──
+        function renderizarProducto() {
+            elNombre.textContent      = producto.nombre;
+            elPrecio.textContent      = `$${producto.precio.toLocaleString('es-CL')}`;
+            elImagen.src              = producto.imagen;
+            elImagen.alt              = producto.nombre;
+            elCategoria.textContent   = producto.categoria || 'Categoría';
+            elDescripcion.textContent = producto.descripcion || 'Sin descripción disponible.';
+
+            renderCuadros(cuadrosEls.toxicidad,  producto.toxicidad   || 0);
+            renderCuadros(cuadrosEls.cuidado,    producto.nivelCuidado|| 0);
+            renderCuadros(cuadrosEls.agua,       producto.agua        || 0);
+            renderCuadros(cuadrosEls.luz,        producto.luz         || 0);
+            renderCuadros(cuadrosEls.solDirecto, producto.solDirecto  || 0);
+            renderCuadros(cuadrosEls.humedad,    producto.humedad     || 0);
+
+            if (producto.stock > 0) {
+                elStock.innerHTML = `<span class="disponible">✅ ${producto.stock} unidades disponibles</span>`;
+                btnAgregar.disabled = false;
+                btnAgregar.textContent = 'Agregar al carrito';
+            } else {
+                elStock.innerHTML = `<span class="agotado">❌ Agotado</span>`;
+                btnAgregar.disabled = true;
+                btnAgregar.textContent = 'Sin stock';
+            }
+
+            cantidad = 1;
+            elCantidad.textContent = cantidad;
+        }
+
+        // ── CARGAR ──
+        async function cargarProducto() {
+            try {
+                const res = await fetch(`/api/producto/${productoId}`);
+                if (!res.ok) throw new Error('No encontrado');
+                producto = await res.json();
+                renderizarProducto();
+            } catch {
+                document.getElementById('productoDetalle').innerHTML = `
+                    <div style="grid-column:1/-1;text-align:center;color:#F44336;padding:40px;">
+                        <h2>Producto no encontrado</h2>
+                        <a href="/" style="color:#2d4a22;">Volver al catálogo</a>
+                    </div>`;
+            }
+        }
+
+        // ── CANTIDAD ──
+        btnMenos.addEventListener('click', () => {
+            if (cantidad > 1) { cantidad--; elCantidad.textContent = cantidad; }
+        });
+        btnMas.addEventListener('click', () => {
+            if (producto && cantidad < producto.stock) { cantidad++; elCantidad.textContent = cantidad; }
+            else mostrarToast('⚠️ No hay suficiente stock');
+        });
+
+        // ── AGREGAR ──
+        btnAgregar.addEventListener('click', () => {
+            if (!producto) return;
+            if (cantidad > producto.stock) { mostrarToast('⚠️ No hay suficiente stock'); return; }
+            const carrito = obtenerCarrito();
+            const existe = carrito.find(i => i.id === producto.id);
+            if (existe) {
+                if (existe.cantidad + cantidad > producto.stock) {
+                    mostrarToast('⚠️ No hay suficiente stock para agregar más'); return;
+                }
+                existe.cantidad += cantidad;
+            } else {
+                carrito.push({ id: producto.id, cantidad });
+            }
+            guardarCarrito(carrito);
+            mostrarToast(`🌿 ${producto.nombre} añadido al carrito (${cantidad})`);
+        });
+
+        actualizarContador();
+        if (productoId) cargarProducto();
+        else document.getElementById('productoDetalle').innerHTML = `
+            <div style="grid-column:1/-1;text-align:center;padding:40px;">
+                <h2 style="color:#2d4a22;">No se especificó un producto</h2>
+                <a href="/" style="color:#2d4a22;">Volver al catálogo</a>
+            </div>`;
+    </script>
+</body>
+</html>

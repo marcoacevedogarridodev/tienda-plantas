@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Figtree:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <title>Tienda de Plantas Paula</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Figtree', system-ui, sans-serif; background: #f5f0eb; }
+
+        /* ── BANNER ── */
+        .banner {
+            position: relative;
+            width: 100%;
+            height: 280px;
+            background: linear-gradient(135deg, #1a2e14 0%, #2d4a22 30%, #3a5c2a 70%);
+            overflow: hidden;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+            margin-bottom: 80px;
+        }
+        .banner img {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            opacity: 0.35;
+        }
+        .banner-eyebrow {
+            display: block;
+            font-size: clamp(0.6rem, 1.5vw, 0.72rem);
+            font-weight: 600;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: white;
+            margin-bottom: 10px;
+        }
+        .banner h1 {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            justify-content: center;
+            text-align: right;
+            color: white;
+            font-size: clamp(2.6rem, 7vw, 3.8rem);
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            line-height: 1.1;
+            padding: clamp(10px, 10vw, 100px);
+            text-shadow: none;
+        }
+        .banner h1 span.verde { color: white; }
+        .banner-petfriendly {
+            position: absolute;
+            left: 20px;
+            bottom: 64px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 14px;
+            border-radius: 999px;
+            background: rgba(255,255,255,0.22);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            color: white;
+            font-size: 0.9rem;
+            font-weight: 600;
+            letter-spacing: 0.02em;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+        }
+        .banner-petfriendly svg {
+            width: 18px;
+            height: 18px;
+            opacity: 0.95;
+        }
+        .banner-distribuidor {
+            position: absolute;
+            left: 20px;
+            bottom: 20px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 14px;
+            border-radius: 999px;
+            background: rgba(255,255,255,0.22);
+            backdrop-filter: blur(6px);
+            -webkit-backdrop-filter: blur(6px);
+            color: white;
+            font-size: 0.9rem;
+            font-weight: 600;
+            letter-spacing: 0.02em;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+        }
+        .banner-distribuidor svg {
+            width: 18px;
+            height: 18px;
+            opacity: 0.95;
+        }
+
+        /* ── CATÁLOGO TÍTULO ── */
+        .catalogo-titulo {
+            text-align: center;
+            color: #2d4a22;
+            font-size: clamp(1.2rem, 4vw, 2.5rem);
+            font-weight: 700;
+            letter-spacing: -0.01em;
+            margin: 0 auto 8px;
+        }
+        .catalogo-subtitulo {
+            text-align: center;
+            color: #7a9a6e;
+            font-size: 1rem;
+            margin: 0 auto 12px;
+        }
+        .catalogo-divider {
+            width: 40px;
+            height: 3px;
+            background: #7dc66b;
+            border-radius: 99px;
+            margin: 0 auto 80px;
+        }
+
+        /* ── GRID CARDS ── */
+        .catalogo {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 50px;
+            max-width: 750px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* ── CARDS ── */
+        .producto {
+            background: white;
+            border-radius: 12px;
+            padding: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            text-align: center;
+            transition: transform 0.2s, box-shadow 0.2s;
+            overflow: hidden;
+            cursor: pointer;
+        }
+        .producto:hover { 
+            transform: translateY(-5px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+        }
+        .producto .img-wrapper {
+            overflow: hidden;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            position: relative;
+        }
+        .producto img {
+            width: 100%;
+            display: block;
+            aspect-ratio: 4 / 3;
+            height: auto;
+            object-fit: cover;
+            border-radius: 8px;
+            transition: transform 0.3s ease;
+        }
+        .producto:hover img {
+            transform: scale(1.7);
+        }
+        .producto .stock-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+        .stock-disponible {
+            background: #2e7d32;
+        }
+        .stock-sin-stock {
+            background: #c62828;
+        }
+        .producto h3 { color: #2d4a22; margin-bottom: 6px; font-size: 1.1rem; font-weight: 600; }
+        .producto p { color: #666; font-size: 0.85rem; margin-bottom: 8px; line-height: 1.4; }
+        .producto-meta {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+        .estado-circle {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            margin-bottom: 2%;
+        }
+        .estado-bajo { background: #4CAF50; }
+        .estado-medio { background: #FFC107; }
+        .estado-alto { background: #c62828; }
+        .precio { font-size: 1.25rem; font-weight: 700; color: #2d4a22; margin-bottom: 12px; }
+        .btn-comprar {
+            background: #2d4a22;
+            color: white;
+            border: none;
+            padding: 10px 22px;
+            border-radius: 25px;
+            font-size: 0.85rem;
+            font-family: 'Figtree', system-ui, sans-serif;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .btn-comprar:hover { background: #1e3316; }
+        .btn-comprar:disabled { background: #aaa; cursor: not-allowed; }
+
+        /* ── CARRITO FLOTANTE ── */
+        .cart-floating {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #2d4a22;
+            color: white;
+            padding: 16px 20px;
+            border-radius: 50px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: transform 0.2s, background 0.2s;
+            z-index: 1000;
+            text-decoration: none;
+        }
+        .cart-floating:hover {
+            transform: scale(1.05);
+            background: #1e3316;
+        }
+        .cart-floating .cart-count {
+            background: #fd0000;
+            color: white;
+            border-radius: 50%;
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: 700;
+        }
+        .cart-floating svg {
+            width: 24px;
+            height: 24px;
+            fill: currentColor;
+        }
+
+        /* ── TOAST NOTIFICACIÓN ── */
+        .toast {
+            position: fixed;
+            bottom: 100px;
+            right: 30px;
+            background: #2d4a22;
+            color: white;
+            padding: 14px 24px;
+            border-radius: 12px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+            transform: translateY(100px);
+            opacity: 0;
+            transition: transform 0.4s ease, opacity 0.4s ease;
+            z-index: 1001;
+            font-weight: 500;
+            max-width: 320px;
+        }
+        .toast.visible {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        /* ── FOOTER ── */
+        footer {
+            margin-top: 100px;
+            padding: 28px 20px 32px;
+            background: transparent;
+            color: #2d4a22;
+            text-align: center;
+        }
+        .footer-redes {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 14px;
+            flex-wrap: wrap;
+        }
+        .footer-redes a {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 8px 20px;
+            border-radius: 99px;
+            border: 1.5px solid #2d4a22;
+            color: #2d4a22;
+            text-decoration: none;
+            font-size: 0.82rem;
+            font-weight: 600;
+            font-family: 'Figtree', system-ui, sans-serif;
+            transition: background 0.2s, color 0.2s;
+        }
+        .footer-redes a:hover { background: #2d4a22; color: white; }
+        .footer-copy {
+            font-size: 0.75rem;
+            color: #9a9490;
+            margin-top: 4px;
+        }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 600px) {
+            .banner { height: 220px; margin-bottom: 40px; }
+            .catalogo { grid-template-columns: 1fr; padding: 0 16px; gap: 20px; }
+            .catalogo-titulo, .catalogo-subtitulo { padding: 0 16px; }
+            .catalogo-divider { margin-bottom: 32px; }
+            footer { margin-top: 60px; }
+            .cart-floating { 
+                bottom: 20px;
+                right: 20px;
+                padding: 12px 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="banner">
+        <img src="/assets/img/banner.jpg" alt="Banner de la tienda de plantas">
+        <h1>
+            <span class="banner-eyebrow">✦ vivero online</span>
+            Tienda de<br>Plantas <span class="verde">Paula</span>
+        </h1>
+
+    </div>
+
+    <h2 class="catalogo-titulo">Catálogo de plantas de colección</h2>
+    <p class="catalogo-subtitulo">Desde especies clásicas hasta plantas exóticas.</p>
+    <div class="catalogo-divider"></div>
+
+    <div class="catalogo" id="catalogo"></div>
+
+    <!-- Carrito flotante -->
+    <a href="/carrito.html" class="cart-floating" id="cartFloating">
+        <svg viewBox="0 0 24 24"><path d="M7 18c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm10 0c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zM6.21 6h13.79l-2.4 8.1c-.3 1.1-1.3 1.9-2.4 1.9H8.4c-1.1 0-2.1-.8-2.4-1.9L3.4 4.8C3.1 3.8 2.1 3 1 3H0v2h1l3.6 13.2C5.1 19.2 6.4 20 7.6 20h10.8c1.2 0 2.5-.8 2.9-2.1L24 8H6.21z"/></svg>
+        <span class="cart-count" id="cartCount">0</span>
+    </a>
+
+    <!-- Toast -->
+    <div class="toast" id="toast"></div>
+
+    <footer>
+        <div class="footer-redes">
+            <a href="https://facebook.com" target="_blank" rel="noopener noreferrer">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"/></svg>
+                Facebook
+            </a>
+            <a href="https://instagram.com" target="_blank" rel="noopener noreferrer">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><circle cx="17.5" cy="6.5" r="1.5" fill="currentColor" stroke="none"/></svg>
+                Instagram
+            </a>
+        </div>
+        <p class="footer-copy">© 2026 Tienda de Plantas Paula. Todos los derechos reservados.</p>
+    </footer>
+
+    <script>
+        const catalogo = document.getElementById('catalogo');
+        const toast = document.getElementById('toast');
+        const cartCount = document.getElementById('cartCount');
+
+        // ── GESTIÓN DEL CARRITO ──
+        function obtenerCarrito() {
+            try {
+                return JSON.parse(localStorage.getItem('carrito')) || [];
+            } catch {
+                return [];
+            }
+        }
+
+        function guardarCarrito(carrito) {
+            localStorage.setItem('carrito', JSON.stringify(carrito));
+            actualizarContador();
+        }
+
+        function actualizarContador() {
+            const carrito = obtenerCarrito();
+            const total = carrito.reduce((sum, item) => sum + item.cantidad, 0);
+            cartCount.textContent = total;
+        }
+
+        function mostrarToast(mensaje) {
+            toast.textContent = mensaje;
+            toast.classList.add('visible');
+            setTimeout(() => toast.classList.remove('visible'), 3000);
+        }
+
+        function agregarAlCarrito(productoId) {
+            const carrito = obtenerCarrito();
+            const existente = carrito.find(item => item.id === productoId);
+            
+            if (existente) {
+                existente.cantidad += 1;
+            } else {
+                carrito.push({ id: productoId, cantidad: 1 });
+            }
+            
+            guardarCarrito(carrito);
+            mostrarToast('🌿 Producto añadido al carrito');
+        }
+
+        // ── CARGAR PRODUCTOS ──
+        async function cargarProductos() {
+            try {
+                const res = await fetch('/api/productos');
+                const productos = await res.json();
+                renderizarProductos(productos);
+            } catch (error) {
+                console.error('Error cargando productos:', error);
+                catalogo.innerHTML = '<p style="text-align:center;color:red;">Error al cargar el catálogo</p>';
+            }
+        }
+
+        function iniciarRefrescoAutomatico() {
+            setInterval(() => {
+                cargarProductos();
+            }, 30000);
+
+            document.addEventListener('visibilitychange', () => {
+                if (!document.hidden) {
+                    cargarProductos();
+                }
+            });
+        }
+
+        function renderizarProductos(productos) {
+            catalogo.innerHTML = productos.map(producto => {
+                const cuidado = (producto.descripcion || '').toLowerCase();
+                let claseEstado = 'estado-bajo';
+                let textoEstado = 'Bajo';
+
+                if (cuidado.includes('medio') || cuidado.includes('media')) {
+                    claseEstado = 'estado-medio';
+                    textoEstado = 'Medio';
+                } else if (cuidado.includes('alto') || cuidado.includes('alta')) {
+                    claseEstado = 'estado-alto';
+                    textoEstado = 'Alto';
+                }
+
+                const stockText = producto.stock > 0 ? `${producto.stock} disponibles` : 'Sin stock';
+                const stockClass = producto.stock > 0 ? '' : 'style="opacity:0.5;"';
+                const stockBadgeClass = producto.stock > 0 ? 'stock-disponible' : 'stock-sin-stock';
+
+                return `
+                    <div class="producto" onclick="window.location.href='/producto.html?id=${producto.id}'" ${stockClass}>
+                        <div class="img-wrapper">
+                            <img src="${producto.imagen}" alt="${producto.nombre}">
+                            <span class="stock-badge ${stockBadgeClass}">${stockText}</span>
+                        </div>
+                        <h3>${producto.nombre}</h3>
+                        <div class="producto-meta">
+                            <p>Nivel de cuidado:</p>
+                            <span class="estado-circle ${claseEstado}" title="Cuidado: ${textoEstado}"></span>
+                        </div>
+                        <div class="precio">$${producto.precio.toLocaleString('es-CL')}</div>
+                        <button class="btn-comprar" data-id="${producto.id}" ${producto.stock === 0 ? 'disabled' : ''}>
+                            ${producto.stock > 0 ? 'Comprar' : 'Sin stock'}
+                        </button>
+                    </div>
+                `;
+            }).join('');
+
+            document.querySelectorAll('.btn-comprar').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    agregarAlCarrito(btn.dataset.id);
+                });
+            });
+        }
+
+        // ── INICIALIZAR ──
+        actualizarContador();
+        cargarProductos();
+        iniciarRefrescoAutomatico();
+    </script>
+</body>
+</html>
